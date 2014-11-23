@@ -234,7 +234,7 @@ int CHttpParser::parseStartLine(char currentChar){
 
 void CHttpParser::getContentLength(){
 	map<string, string>::const_iterator it;
-	it = m_headerMap.find("Content-length");
+	it = m_headerMap.find("Content-Length");
 	if (it!=m_headerMap.end()){//found it
 		m_contentLen=atol(it->second.c_str());
 	}
@@ -268,7 +268,7 @@ int CHttpParser::checkCompleteStrict(const char* data,size_t dataLen){
 		readingNum = false;
 		numStr = "";
 
-		contentLengthPos = httpHeader.find("Content-length", i);
+		contentLengthPos = httpHeader.find("Content-Length", i);
 		if (contentLengthPos == string::npos){//this should be a GET request
 			if (httpHeader.compare(0,4,"POST")==0){//A post request but No Content-length,error
 				return ERROR_NO_CONTENTLEN_POST;
@@ -361,13 +361,53 @@ void CHttpParser::printFormatedHeader()const{
 		for (headMapIt = m_headerMap.begin(); headMapIt != m_headerMap.end();++headMapIt){
 			cout << "key=" << headMapIt->first << "|value=" << headMapIt->second << endl;
 		}
-		cout << "Content-length=" << m_contentLen << endl;
+		cout << "Content-Length=" << m_contentLen << endl;
 		cout << "postdata:" << m_postData << endl;
 
 	}
 	else{
 		cout << "Unsupported Http Method!" << endl;
 	}
+}
+
+bool CHttpParser::getValueOfHeader(const string& key, string& val)const{
+	map<string, string>::const_iterator headMapIt;
+	headMapIt = m_headerMap.find(key);
+	if (headMapIt!=m_headerMap.end()){
+		val = headMapIt->second;
+		return true;
+	}
+	return false;
+}
+
+bool CHttpParser::getValueOfHeader(const string& key,long int * val)const{
+	map<string, string>::const_iterator headMapIt;
+	headMapIt = m_headerMap.find(key);
+	if (headMapIt!=m_headerMap.end()){
+		*val = atol(headMapIt->second.c_str());
+		return true;
+	}
+	return false;
+}
+
+bool CHttpParser::getValueOfHeader(const string& key,int * val)const{
+	map<string, string>::const_iterator headMapIt;
+	headMapIt = m_headerMap.find(key);
+	if (headMapIt!=m_headerMap.end()){
+		*val = atoi(headMapIt->second.c_str());
+		return true;
+	}
+	return false;
+}
+
+bool CHttpParser::getValueOfHeader(const string& key,unsigned int * val)const{
+	map<string, string>::const_iterator headMapIt;
+	headMapIt = m_headerMap.find(key);
+	if (headMapIt != m_headerMap.end()){
+		*val = atol(headMapIt->second.c_str());
+		return true;
+	}
+	return false;
 }
 //clear state functions
 

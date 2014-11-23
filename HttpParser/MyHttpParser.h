@@ -16,12 +16,6 @@ private:
 		STATE_READ_CRLF,
 		STATE_READ_POSTDATA
 	};
-	//supported http methods
-	enum{
-		HTTP_METHOD_UNKNOW = 0,
-		HTTP_METHOD_GET,
-		HTTP_METHOD_POST
-	};
 	//start line parse states
 	enum{
 		STATE_FIND_METHOD=1,
@@ -82,6 +76,12 @@ private:
 	void clearHeadLineState();
 		
 public:
+	//supported http methods
+	enum{
+		HTTP_METHOD_UNKNOW = 0,
+		HTTP_METHOD_GET,
+		HTTP_METHOD_POST
+	};
 	CHttpParser(){
 		m_state = STATE_READ_START_LINE;
 		m_startLineSubState = STATE_FIND_METHOD;
@@ -124,7 +124,42 @@ public:
 	
 	*/
 	void printFormatedHeader()const;
-
+	/*返回http方法
+	@return HTTP_METHOD_GET:GET 方法 HTTP_METHOD_POST:Post方法
+	*/
+	int httpMethod()const{
+		return this->m_httpMethod;
+	}
+	/*返回HTTP的头部字段
+	@param key 头部字段的名字
+	@param str 返回的字段value
+	@returns true:成功 false:失败，无key所指示的字段
+	*/
+	bool getValueOfHeader(const string& key,string& str)const;
+	/*返回HTTP的头部字段
+	@param key 头部字段的名字
+	@param val 返回的字段value
+	@returns true:成功 false:失败，无key所指示的字段
+	*/
+	bool getValueOfHeader(const string& key,long int *str)const;
+	/*返回HTTP的头部字段
+	@param key 头部字段的名字
+	@param val 返回的字段value
+	@returns true:成功 false:失败，无key所指示的字段
+	*/
+	bool getValueOfHeader(const string& key,int *str)const;
+	/*返回HTTP的头部字段
+	@param key 头部字段的名字
+	@param val 返回的字段value
+	@returns true:成功 false:失败，无key所指示的字段
+	*/
+	bool getValueOfHeader(const string& key, unsigned int *str)const;
+	/*返回HTTP的url
+	@returns http的url
+	*/
+	string getUrl()const{
+		return m_url;
+	}
 };
 }
 #endif
